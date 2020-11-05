@@ -1,0 +1,17 @@
+{% extends 'base.html'%}
+
+{% block head %}
+<title>Course Home</title>
+{% endblock %}
+
+{% block body %}
+{% include 'sidebar.html' %}
+<div class="content">
+   <h1>Hello WORLD</h1>
+   <h1>{{ course_name }}</h1>
+   <h1>{{ course_year }}</h1>
+   <h1>{{ course_semester }}</h1>
+   <h1>{{ course_description }}</h1>
+   <h1>{{ course_length }}</h1>
+</div>
+{% endblock %}
