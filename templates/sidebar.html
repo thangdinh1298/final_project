@@ -1,7 +1,23 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/sidebar.css') }}">
 <div class="sidebar">
-  <a class="active" href="#home">Course Info</a>
-  <a href="#news">Schedule</a>
-  <a href="#contact">Annoucement</a>
-  <a href="#about">Week 1</a>
+   <form action="{{ url_for('.course_overview_handler') }}">
+     <input type="hidden" value="{{ course.id }}" name="course_id">
+     <button type="submit">Course Overview</button>
+  </form>
+  <form action="{{ url_for('.course_info_handler') }}">
+     <input type="hidden" value="{{ course.id }}" name="course_id">
+     <button type="submit">Course Info</button>
+  </form>
+  <form action="{{ url_for('.hello_handler') }}">
+     <input type="hidden" value="{{ course.id }}" name="course_id">
+     <button type="submit">Announcement</button>
+  </form>
+  <form action="{{ url_for('.hello_handler') }}">
+     <input type="hidden" value="{{ course.id }}" name="course_id">
+     <button type="submit">Course content</button>
+  </form>
+  <form action="{{ url_for('.hello_handler') }}">
+     <input type="hidden" value="{{ course.id }}" name="course_id">
+     <button type="submit">Livestream</button>
+  </form>
 </div>

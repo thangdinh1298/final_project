@@ -6,12 +6,20 @@
 
 {% block body %}
 {% include 'sidebar.html' %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/course.css') }}">
 <div class="content">
-   <h1>Hello WORLD</h1>
-   <h1>{{ course_name }}</h1>
-   <h1>{{ course_year }}</h1>
-   <h1>{{ course_semester }}</h1>
-   <h1>{{ course_description }}</h1>
-   <h1>{{ course_length }}</h1>
+   <div class="course-title">
+      <h2>
+         Welcome to {{ course.name }} 
+         {% if course.year is not none %}
+         - {{ course.year }} 
+         {% endif %}
+         {% if course.semester is not none %}
+         - {{ course.semester }}
+         {% endif %}
+      </h2>
+   </div>
+   <div>{{ course.description | safe}}</div>
+   <div>{{ course.length }}</div>
 </div>
 {% endblock %}
