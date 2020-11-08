@@ -7,4 +7,4 @@ Base = automap_base()
 Base.prepare(engine, reflect=True)
 Session = sessionmaker(bind=engine)
 Course = Base.classes.Course
-
+Homework = Base.classes.Homework

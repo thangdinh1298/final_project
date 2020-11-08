@@ -19,18 +19,18 @@ CREATE TABLE IF NOT EXISTS Course (
 );
 
 CREATE TABLE IF NOT EXISTS StudyMaterial (
-	id INT NOT NULL AUTO_INCREMENT,
 	course_id INT NOT NULL,
 	week INT NOT NULL,
-	PRIMARY KEY(id),
+	description MEDIUMTEXT,
+	PRIMARY KEY(course_id, week),
 	FOREIGN KEY (course_id) REFERENCES Course(id)
 );
 
 CREATE TABLE IF NOT EXISTS Homework (
-	id INT NOT NULL AUTO_INCREMENT,
 	course_id INT NOT NULL,
 	week INT NOT NULL,
-	PRIMARY KEY(id),
+	description MEDIUMTEXT,
+	PRIMARY KEY(course_id, week),
 	FOREIGN KEY (course_id) REFERENCES Course(id)
 );
 

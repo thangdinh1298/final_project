@@ -7,8 +7,21 @@
 {% block body %}
 {% include 'sidebar.html' %}
 <div class="content">
+   <ul>
    {% for number in range(course_length) %}
-   <li><a href="{{ url_for('.course_week_handler') }}"> Week {{ number }}</a></li>
+      <li> Week {{ number }}</li>
+      <ul>
+         <li>
+            <a href="{{ url_for('.course_week_handler', week_num=number, course_id=session['course_id']) }}">Materials</a>
+         </li>
+         <li>
+            <a href="{{ url_for('.course_week_handler', week_num=number, course_id=session['course_id']) }}">Homework</a>
+         </li>
+         <li>
+            <a href="{{ url_for('.course_week_handler', week_num=number, course_id=session['course_id']) }}">Videos</a>
+         </li>
+      </ul>
    {% endfor %}    
+   </ul>
 </div>
 {% endblock %}
