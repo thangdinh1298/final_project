@@ -1,0 +1,12 @@
+<div class="course-title">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/course.css') }}">
+   <h2>
+      Welcome to {{ course.name }} 
+      {% if course.year is not none %}
+      - {{ course.year }} 
+      {% endif %}
+      {% if course.semester is not none %}
+      - {{ course.semester }}
+      {% endif %}
+   </h2>
+</div>

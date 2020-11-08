@@ -1,0 +1,12 @@
+{% extends 'base.html'%}
+
+{% block head %}
+<title>Course Info</title>
+{% endblock %}
+
+{% block body %}
+{% include 'sidebar.html' %}
+<div class="content">
+   {{ info | safe }}
+</div>
+{% endblock %}

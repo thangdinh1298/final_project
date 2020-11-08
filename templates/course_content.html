@@ -1,0 +1,14 @@
+{% extends 'base.html'%}
+
+{% block head %}
+<title>Course Content</title>
+{% endblock %}
+
+{% block body %}
+{% include 'sidebar.html' %}
+<div class="content">
+   {% for number in range(course_length) %}
+   <li><a href="{{ url_for('.course_week_handler') }}"> Week {{ number }}</a></li>
+   {% endfor %}    
+</div>
+{% endblock %}

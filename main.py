@@ -2,6 +2,7 @@ from flask import Flask
 from controller.course import course_page
 
 app = Flask(__name__)
+app.secret_key = '123'
 app.register_blueprint(course_page, url_prefix='/course')
 
 

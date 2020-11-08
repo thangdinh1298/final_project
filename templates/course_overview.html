@@ -1,0 +1,25 @@
+{% extends 'base.html'%}
+
+{% block head %}
+<title>Course Home</title>
+{% endblock %}
+
+{% block body %}
+{% include 'sidebar.html' %}
+<div class="content">
+   <div class="course-title">
+   <link rel="stylesheet" href="{{ url_for('static', filename='css/course.css') }}">
+      <h2>
+         Welcome to {{ course.name }} 
+         {% if course.year is not none %}
+         - {{ course.year }} 
+         {% endif %}
+         {% if course.semester is not none %}
+         - {{ course.semester }}
+         {% endif %}
+      </h2>
+   </div>
+   <div>{{ course.description | safe}}</div>
+   <div>{{ course.length }}</div>
+</div>
+{% endblock %}
