@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, Markup
 from database.db import Session, Course
 
 course_page = Blueprint('simple_page', __name__,template_folder='templates')
@@ -23,8 +23,8 @@ def hello_handler():
 def course_info_handler():
     course_id = request.args.get('course_id')
     session = Session()
-    course = session.query(Course).filter(Course.id==course_id).first()
+    course = session.query(Course.info).filter(Course.id==course_id).first()
 
     if course == None:
         return "Course not found"
-    return 
+    return Markup(course.info).unescape()
