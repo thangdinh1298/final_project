@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, Markup, session
-from database.db import Session, Course, Homework
+from database.db import Session, Course, Homework, StudyMaterial
 
 course_page = Blueprint('course_page', __name__,template_folder='templates')
 
@@ -49,8 +49,22 @@ def course_info_handler(course_id):
     info = Markup(course.info).unescape()
     return render_template('course_info.html', info=info) 
 
-@course_page.route('/<int:course_id>/week/<int:week_num>')
-def course_week_handler(course_id=None,week_num=None):
+@course_page.route('/<int:course_id>/week/<int:week_num>/homework')
+def course_week_homework_handler(course_id=None,week_num=None):
     db_session = Session()
     homework = db_session.query(Homework.description).filter(Homework.course_id==course_id, Homework.week==week_num).first()
-    return Markup(homework.description).unescape()
+    if homework == None:
+        return "Resource not found"
+    return render_template('course_content_detail.html', html=homework.description)
+
+@course_page.route('/<int:course_id>/week/<int:week_num>/material')
+def course_week_material_handler(course_id=None,week_num=None):
+    db_session = Session()
+    material = db_session.query(StudyMaterial.description).filter(StudyMaterial.course_id==course_id, StudyMaterial.week==week_num).first()
+    if material == None: 
+        return "Resource not found"
+    return render_template('course_content_detail.html', html=material.description)
+
+@course_page.route('/<int:course_id>/livestream')
+def course_livestream_handler(course_id=None):
+    pass 

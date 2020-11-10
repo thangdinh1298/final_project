@@ -12,13 +12,13 @@
       <li> Week {{ number }}</li>
       <ul>
          <li>
-            <a href="{{ url_for('.course_week_handler', week_num=number, course_id=session['course_id']) }}">Materials</a>
+            <a href="{{ url_for('.course_week_material_handler', week_num=number, course_id=session['course_id']) }}">Materials</a>
          </li>
          <li>
-            <a href="{{ url_for('.course_week_handler', week_num=number, course_id=session['course_id']) }}">Homework</a>
+            <a href="{{ url_for('.course_week_homework_handler', week_num=number, course_id=session['course_id']) }}">Homework</a>
          </li>
          <li>
-            <a href="{{ url_for('.course_week_handler', week_num=number, course_id=session['course_id']) }}">Videos</a>
+            <a href="{{ url_for('.course_week_homework_handler', week_num=number, course_id=session['course_id']) }}">Videos</a>
          </li>
       </ul>
    {% endfor %}    
