@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block head %}<title>Resource Not Found</title>{% endblock %}
+{% block body %}
+  <h1>Resource Not Found</h1>
+  <p>.
+  <p><a href="{{ url_for('course_page.course_overview_handler', course_id=session['course_id']) }}">back home page</a>
+{% endblock %}

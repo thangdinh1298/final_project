@@ -67,4 +67,4 @@ def course_week_material_handler(course_id=None,week_num=None):
 
 @course_page.route('/<int:course_id>/livestream')
 def course_livestream_handler(course_id=None):
-    pass 
+    return render_template('course_livestream.html') 

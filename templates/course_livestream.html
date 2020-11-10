@@ -1,0 +1,28 @@
+{% extends 'base.html'%}
+
+{% block head %}
+<title>Course Livestream</title>
+<script src="https://meet.jit.si/external_api.js"></script>
+{% endblock %}
+
+{% block body %}
+{% include 'sidebar.html' %}
+<div class="content">
+ 	 <input id="txtField" type="text" id="lname" name="lname">
+	 <button onclick="joinRoom()">Click Me</button>
+	 <div id="content">
+	 </div>
+    <script>
+	    function joinRoom() {
+	  	  const domain = 'meet.jit.si';
+	  	  const options = {
+	  			 roomName: document.getElementById("txtField").value,
+	  			 width: 700,
+	  			 height: 700,
+	  			 parentNode: document.querySelector("#content") 
+	  	  };
+	  	  const api = new JitsiMeetExternalAPI(domain, options);
+	    }				  
+    </script>
+</div>
+{% endblock %}
