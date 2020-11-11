@@ -6,6 +6,7 @@ DROP TABLE IF EXISTS StudyMaterial;
 DROP TABLE IF EXISTS Homework;
 DROP TABLE IF EXISTS User;
 DROP TABLE IF EXISTS User_Course;
+DROP TABLE IF EXISTS Announcement;
 
 CREATE TABLE IF NOT EXISTS Course (
 	id INT NOT NULL AUTO_INCREMENT,
@@ -32,6 +33,15 @@ CREATE TABLE IF NOT EXISTS Homework (
 	description MEDIUMTEXT,
 	PRIMARY KEY(course_id, week),
 	FOREIGN KEY (course_id) REFERENCES Course(id)
+);
+
+CREATE TABLE IF NOT EXISTS Announcement (
+   id INT NOT NULL AUTO_INCREMENT,
+   description MEDIUMTEXT,
+   course_id INT NOT NULL,
+   created_date DATETIME,
+   PRIMARY KEY(id),
+   FOREIGN KEY (course_id) REFERENCES Course(id)
 );
 
 CREATE TABLE IF NOT EXISTS User (

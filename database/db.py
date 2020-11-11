@@ -9,3 +9,4 @@ Session = sessionmaker(bind=engine)
 Course = Base.classes.Course
 Homework = Base.classes.Homework
 StudyMaterial = Base.classes.StudyMaterial
+Announcement = Base.classes.Announcement

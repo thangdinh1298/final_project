@@ -10,3 +10,7 @@ INSERT INTO StudyMaterial VALUES (4, 1, "This is week 1s study materials");
 
 INSERT INTO Homework VALUES (4, 1, "This is week 1s homework");
 
+INSERT INTO Announcement (course_id, description, created_date) VALUES 
+(4, "Notice: This week's class will be held at room `test` with password 123", NOW()),
+(4, "Notice: This week's class will be held at room `test1` with password 123", NOW()),
+(4, "Notice: This week's class will be held at room `test2` with password 123", NOW());

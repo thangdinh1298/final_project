@@ -1,0 +1,17 @@
+{% extends 'base.html'%}
+
+{% block head %}
+<title>Course Announcements</title>
+{% endblock %}
+
+{% block body %}
+{% include 'sidebar.html' %}
+<div class="content">
+   <ul>
+   {% for announcement in announcements %}
+   <li> Created time: {{ announcement.created_date }} </li>
+   <div> {{ announcement.description }} </div>
+   {% endfor %}    
+   </ul>
+</div>
+{% endblock %}

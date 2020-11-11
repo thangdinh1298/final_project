@@ -1,14 +1,11 @@
 from flask import Blueprint, render_template, request, Markup, session
-from database.db import Session, Course, Homework, StudyMaterial
+from database.db import Session, Course, Homework, StudyMaterial, Announcement
+from sqlalchemy import desc
 
 course_page = Blueprint('course_page', __name__,template_folder='templates')
 
 @course_page.route('/<int:course_id>')
 def course_overview_handler(course_id=None):
-    if course_id == None:
-        return "Course not found"
-    session['course_id'] = course_id
-
     db_session = Session()
     course = db_session.query(Course).filter(Course.id==course_id).first()
 
@@ -23,10 +20,6 @@ def hello_handler():
 
 @course_page.route('/<int:course_id>/content')
 def content_handler(course_id=None):
-    if course_id == None:
-        return "Course not found"
-    session['course_id'] = course_id
-
     db_session = Session()
     course = db_session.query(Course.course_length).filter(Course.id==course_id).first()
 
@@ -37,10 +30,6 @@ def content_handler(course_id=None):
 
 @course_page.route('/<int:course_id>/info')
 def course_info_handler(course_id):
-    if course_id == None:
-        return "Course not found"
-    session['course_id'] = course_id
-
     db_session = Session()
     course = db_session.query(Course.info).filter(Course.id==course_id).first()
 
@@ -68,3 +57,16 @@ def course_week_material_handler(course_id=None,week_num=None):
 @course_page.route('/<int:course_id>/livestream')
 def course_livestream_handler(course_id=None):
     return render_template('course_livestream.html') 
+
+@course_page.route('/<int:course_id>/announcements')
+def course_announcements_handler(course_id=None):
+    db_session = Session()
+    # FIXME: Perhaps we need no fetch by pages and not all...
+    announcements = db_session.query(Announcement.description, Announcement.created_date).filter(Announcement.course_id==course_id).order_by(desc(Announcement.created_date)).all()
+    return render_template('course_announcements.html', announcements=announcements)
+
+@course_page.url_value_preprocessor
+def set_course_id(endpoint, values):
+    if 'course_id' not in values:
+        return "Course not found"
+    session['course_id'] = values['course_id']
