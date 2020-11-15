@@ -5,10 +5,10 @@ DROP TABLE IF EXISTS Course;
 DROP TABLE IF EXISTS StudyMaterial;
 DROP TABLE IF EXISTS Homework;
 DROP TABLE IF EXISTS User;
-DROP TABLE IF EXISTS User_Course;
+DROP TABLE IF EXISTS UserCourse;
 DROP TABLE IF EXISTS Announcement;
 DROP TABLE IF EXISTS Role;
-DROP TABLE IF EXISTS User_Role;
+DROP TABLE IF EXISTS UserRole;
 
 CREATE TABLE IF NOT EXISTS Course (
 	id INT NOT NULL AUTO_INCREMENT,
@@ -54,9 +54,12 @@ CREATE TABLE IF NOT EXISTS User (
 	phone VARCHAR(15),
 	PRIMARY KEY(id)
 );
-
-CREATE TABLE IF NOT EXISTS User_Course (
-	id INT NOT NULL AUTO_INCREMENT,
+'''
+FIXME: This table design is very bad but sql alchemy wont reflect this table if we remove id
+and make primary key a composite key of course_id and user_id
+'''
+CREATE TABLE IF NOT EXISTS UserCourse (
+   id INT NOT NULL AUTO_INCREMENT,
 	course_id INT NOT NULL,
 	user_id INT NOT NULL,
 	PRIMARY KEY(id),
@@ -70,7 +73,7 @@ CREATE TABLE IF NOT EXISTS Role (
    PRIMARY KEY (id)
 );
 
-CREATE TABLE IF NOT EXISTS User_Role (
+CREATE TABLE IF NOT EXISTS UserRole (
    user_id INT NOT NULL,
    role_id INT NOT NULL,
    PRIMARY KEY (user_id, role_id),

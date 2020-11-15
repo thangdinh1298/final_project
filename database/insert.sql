@@ -15,4 +15,12 @@ INSERT INTO Announcement (course_id, description, created_date) VALUES
 (4, "Notice: This week's class will be held at room `test1` with password 123", NOW()),
 (4, "Notice: This week's class will be held at room `test2` with password 123", NOW());
 
-INSERT INTO User (name, password) VALUES ('thang', '123')
+INSERT INTO User (name, password) VALUES 
+('thang', '123'),
+('superuser', 'thisisapassword');
+
+INSERT INTO UserCourse (user_id, course_id) VALUES
+(2, 2),
+(2, 4),
+(1, 1),
+(1, 3);

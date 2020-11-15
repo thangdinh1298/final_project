@@ -1,4 +1,4 @@
-from flask_login import LoginManager, login_user 
+from flask_login import LoginManager, login_user
 from flask import Blueprint, request, redirect, url_for
 from database.db import User, Session
 

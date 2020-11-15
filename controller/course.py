@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, Markup, session, abort
-from database.db import Session, Course, Homework, StudyMaterial, Announcement
+from database.db import Session, Course, Homework, StudyMaterial, Announcement, UserCourse
 from sqlalchemy import desc
-from flask_login import login_required
+from flask_login import login_required, current_user
 
 course_page = Blueprint('course_page', __name__,template_folder='templates')
 
@@ -73,4 +73,10 @@ def course_announcements_handler(course_id=None):
 def set_course_id(endpoint, values):
     if 'course_id' not in values:
         abort(404)
+
+    db_session = Session()
+    course_id = values['course_id']
+    if db_session.query(UserCourse.id).filter(UserCourse.course_id==course_id, UserCourse.user_id==current_user.id).first() == None:
+        abort(401)
+
     session['course_id'] = values['course_id']
