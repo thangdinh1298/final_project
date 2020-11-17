@@ -1,9 +1,10 @@
-from flask import Flask, render_template, redirect, url_for
+from app import app
 from flask_login import  logout_user, login_required
+from flask import render_template, redirect, url_for
 from controller.course import course_page
 from controller.auth import login_manager, auth_page
 
-app = Flask(__name__)
+
 login_manager.init_app(app)
 app.secret_key = '123'
 app.register_blueprint(course_page, url_prefix='/course')
@@ -19,6 +20,7 @@ def page_not_found(e):
 def logout():
     logout_user()
     return redirect(url_for('auth_page.login'))
+
 
 if __name__ == "__main__":
     app.register_error_handler(404, page_not_found)

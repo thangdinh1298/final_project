@@ -1,6 +1,6 @@
 from flask_login import LoginManager, login_user
 from flask import Blueprint, request, redirect, url_for
-from database.db import User, Session
+from database.db import User, db
 
 login_manager = LoginManager()
 login_manager.login_view = "auth_page.login"
@@ -10,7 +10,7 @@ auth_page = Blueprint('auth_page', __name__)
 def load_user(user_id):
     """Check if user is logged-in on every page load."""
     if user_id is not None:
-        user = Session().query(User).filter(User.id==user_id).first()
+        user = db.session.query(User).filter(User.id==user_id).first()
         print("User is: ", user)
         return user
     return None
@@ -30,7 +30,7 @@ def login():
     password = request.form['password']
 
     #FIXME: Hash password and compare
-    user = Session().query(User).filter(User.name==username, User.password==password).first()
+    user = db.session.query(User).filter(User.name==username, User.password==password).first()
     if user is not None:
         print("User is: ", user)
         login_user(user)

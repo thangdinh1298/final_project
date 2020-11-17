@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, Markup, session, abort
-from database.db import Session, Course, Homework, StudyMaterial, Announcement, UserCourse
+from database.db import Course, Homework, StudyMaterial, Announcement, UserCourse, db
 from sqlalchemy import desc
 from flask_login import login_required, current_user
 
@@ -8,8 +8,7 @@ course_page = Blueprint('course_page', __name__,template_folder='templates')
 @course_page.route('/<int:course_id>')
 @login_required
 def course_overview_handler(course_id=None):
-    db_session = Session()
-    course = db_session.query(Course).filter(Course.id==course_id).first()
+    course = db.session.query(Course).filter(Course.id==course_id).first()
 
     if course == None:
         abort(404)
@@ -19,8 +18,7 @@ def course_overview_handler(course_id=None):
 @course_page.route('/<int:course_id>/content')
 @login_required
 def content_handler(course_id=None):
-    db_session = Session()
-    course = db_session.query(Course.course_length).filter(Course.id==course_id).first()
+    course = db.session.query(Course.course_length).filter(Course.id==course_id).first()
 
     if course == None:
         abort(404)
@@ -30,8 +28,7 @@ def content_handler(course_id=None):
 @course_page.route('/<int:course_id>/info')
 @login_required
 def course_info_handler(course_id):
-    db_session = Session()
-    course = db_session.query(Course.info).filter(Course.id==course_id).first()
+    course = db.session.query(Course.info).filter(Course.id==course_id).first()
 
     if course == None:
         abort(404)
@@ -41,8 +38,7 @@ def course_info_handler(course_id):
 @course_page.route('/<int:course_id>/week/<int:week_num>/homework')
 @login_required
 def course_week_homework_handler(course_id=None,week_num=None):
-    db_session = Session()
-    homework = db_session.query(Homework.description).filter(Homework.course_id==course_id, Homework.week==week_num).first()
+    homework = db.session.query(Homework.description).filter(Homework.course_id==course_id, Homework.week==week_num).first()
     if homework == None:
         abort(404)
     return render_template('course_content_detail.html', html=homework.description)
@@ -50,8 +46,7 @@ def course_week_homework_handler(course_id=None,week_num=None):
 @course_page.route('/<int:course_id>/week/<int:week_num>/material')
 @login_required
 def course_week_material_handler(course_id=None,week_num=None):
-    db_session = Session()
-    material = db_session.query(StudyMaterial.description).filter(StudyMaterial.course_id==course_id, StudyMaterial.week==week_num).first()
+    material = db.session.query(StudyMaterial.description).filter(StudyMaterial.course_id==course_id, StudyMaterial.week==week_num).first()
     if material == None: 
         abort(404)
     return render_template('course_content_detail.html', html=material.description)
@@ -64,19 +59,16 @@ def course_livestream_handler(course_id=None):
 @course_page.route('/<int:course_id>/announcements')
 @login_required
 def course_announcements_handler(course_id=None):
-    db_session = Session()
     # FIXME: Perhaps we need no fetch by pages and not all...
-    announcements = db_session.query(Announcement.description, Announcement.created_date).filter(Announcement.course_id==course_id).order_by(desc(Announcement.created_date)).all()
+    announcements = db.session.query(Announcement.description, Announcement.created_date).filter(Announcement.course_id==course_id).order_by(desc(Announcement.created_date)).all()
     return render_template('course_announcements.html', announcements=announcements)
 
 @course_page.url_value_preprocessor
 def set_course_id(endpoint, values):
     if 'course_id' not in values:
         abort(404)
-
-    db_session = Session()
     course_id = values['course_id']
-    if db_session.query(UserCourse.id).filter(UserCourse.course_id==course_id, UserCourse.user_id==current_user.id).first() == None:
+    if db.session.query(UserCourse.id).filter(UserCourse.course_id==course_id, UserCourse.user_id==current_user.id).first() == None:
         abort(401)
 
     session['course_id'] = values['course_id']

@@ -1,9 +1,11 @@
 from sqlalchemy import create_engine
 from sqlalchemy.ext.automap import automap_base
-from sqlalchemy.orm import sessionmaker
 from flask_login import UserMixin
+from flask_sqlalchemy import SQLAlchemy
+from app import app
 
-engine = create_engine('mysql+pymysql://root:12345678@localhost:3306/CourseManager', echo=True)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:12345678@localhost:3306/CourseManager'
+db = SQLAlchemy(app)
 Base = automap_base()
 
 #Declare to inherit from UserMixin
@@ -13,8 +15,7 @@ class User(Base, UserMixin):
     def __str__(self):
         return "{} {}".format(self.id, self.name)
 
-Base.prepare(engine, reflect=True)
-Session = sessionmaker(bind=engine)
+Base.prepare(db.engine, reflect=True)
 Course = Base.classes.Course
 Homework = Base.classes.Homework
 StudyMaterial = Base.classes.StudyMaterial
