@@ -1,4 +1,4 @@
-from flask_login import LoginManager, login_user
+from flask_login import LoginManager, login_user, logout_user, login_required
 from flask import Blueprint, request, redirect, url_for
 from database.db import User, db
 
@@ -11,7 +11,6 @@ def load_user(user_id):
     """Check if user is logged-in on every page load."""
     if user_id is not None:
         user = db.session.query(User).filter(User.id==user_id).first()
-        print("User is: ", user)
         return user
     return None
 
@@ -32,7 +31,6 @@ def login():
     #FIXME: Hash password and compare
     user = db.session.query(User).filter(User.name==username, User.password==password).first()
     if user is not None:
-        print("User is: ", user)
         login_user(user)
         return redirect(url_for('course_page.course_overview_handler', course_id=4))
 
@@ -48,3 +46,10 @@ def login():
 def unauthorized():
     """Redirect unauthorized users to Login page."""
     return '<h2>Unauthorized</h2>'
+
+@auth_page.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('.login'))
+

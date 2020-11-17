@@ -9,29 +9,18 @@ course_page = Blueprint('course_page', __name__,template_folder='templates')
 @login_required
 def course_overview_handler(course_id=None):
     course = db.session.query(Course).filter(Course.id==course_id).first()
-
-    if course == None:
-        abort(404)
-
     return render_template('course_overview.html', course=course)
 
 @course_page.route('/<int:course_id>/content')
 @login_required
 def content_handler(course_id=None):
     course = db.session.query(Course.course_length).filter(Course.id==course_id).first()
-
-    if course == None:
-        abort(404)
-
     return render_template('course_content.html', course_length=course.course_length)
 
 @course_page.route('/<int:course_id>/info')
 @login_required
 def course_info_handler(course_id):
     course = db.session.query(Course.info).filter(Course.id==course_id).first()
-
-    if course == None:
-        abort(404)
     info = Markup(course.info).unescape()
     return render_template('course_info.html', info=info) 
 
@@ -40,7 +29,7 @@ def course_info_handler(course_id):
 def course_week_homework_handler(course_id=None,week_num=None):
     homework = db.session.query(Homework.description).filter(Homework.course_id==course_id, Homework.week==week_num).first()
     if homework == None:
-        abort(404)
+        return render_template('course_content_detail.html')
     return render_template('course_content_detail.html', html=homework.description)
 
 @course_page.route('/<int:course_id>/week/<int:week_num>/material')
@@ -48,7 +37,7 @@ def course_week_homework_handler(course_id=None,week_num=None):
 def course_week_material_handler(course_id=None,week_num=None):
     material = db.session.query(StudyMaterial.description).filter(StudyMaterial.course_id==course_id, StudyMaterial.week==week_num).first()
     if material == None: 
-        abort(404)
+        return render_template('course_content_detail.html')
     return render_template('course_content_detail.html', html=material.description)
 
 @course_page.route('/<int:course_id>/livestream')
@@ -68,6 +57,12 @@ def set_course_id(endpoint, values):
     if 'course_id' not in values:
         abort(404)
     course_id = values['course_id']
+    if db.session.query(Course.id).filter(Course.id==course_id).first() == None:
+        abort(404)
+
+    if current_user.is_anonymous == True:
+        abort(401)
+
     if db.session.query(UserCourse.id).filter(UserCourse.course_id==course_id, UserCourse.user_id==current_user.id).first() == None:
         abort(401)
 
