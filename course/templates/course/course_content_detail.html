@@ -1,0 +1,16 @@
+{% extends 'base.html'%}
+
+{% block head %}
+<title>Course Homework</title>
+{% endblock %}
+
+{% block body %}
+{% include 'course/sidebar.html' %}
+<div class="content">
+   {% if html is defined %}
+   {{ html|safe }}
+   {% else %}
+   <p>No homework is available for this week</p>
+   {% endif %}
+</div>
+{% endblock %}

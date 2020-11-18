@@ -32,7 +32,7 @@ def login():
     user = db.session.query(User).filter(User.name==username, User.password==password).first()
     if user is not None:
         login_user(user)
-        return redirect(url_for('course_page.course_overview_handler', course_id=4))
+        return redirect(url_for('index_page.index_page_handler'))
 
     return '''
                <form action='login' method='POST'>
