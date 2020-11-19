@@ -15,4 +15,7 @@
   <form action="{{ url_for('.course_livestream_handler', course_id=session['course_id']) }}">
      <button type="submit">Livestream</button>
   </form>
+  <form action="{{ url_for('index_page.index_page_handler') }}">
+     <button type="submit">Back to index page</button>
+  </form>
 </div>
