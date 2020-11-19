@@ -3,7 +3,7 @@ from flask_login import login_required, current_user
 from database.db import db, Course, UserCourse
 
 index_page = Blueprint('index_page', __name__,template_folder='templates')
-RESULT_PER_PAGE = 1
+RESULT_PER_PAGE = 2
 
 #TODO: Make default page your courses page
 @index_page.route('/index')
@@ -16,11 +16,24 @@ def index_page_handler():
 def dummy_handler():
     return "Hello"
 
-@index_page.route('/find_courses')
+@index_page.route('/find_courses', methods=['GET'])
 @login_required
-def find_course_handler():
-    if request.method == 'GET':
+def find_courses_handler():
+    if 'q' not in request.args or request.args['q'] == "":
         return render_template('index/find_course.html')
+
+    page = request.args.get('page', 1, type=int)
+    text = request.args['q'] 
+    search_pattern = '%{}%'.format(text)
+    courses = db.session.query(Course.id, Course.name)\
+                        .filter(Course.name.like(search_pattern))\
+                        .paginate(page, RESULT_PER_PAGE, False)
+    next_url = url_for('.find_courses_handler', page=courses.next_num, q=text)\
+            if courses.has_next else None
+    prev_url = url_for('.find_courses_handler', page=courses.prev_num, q=text)\
+            if courses.has_prev else None
+    return render_template('index/find_course.html', search_result=courses.items,\
+                            next_url=next_url, prev_url=prev_url)
 
 @index_page.route('/view_registered_courses')
 @login_required

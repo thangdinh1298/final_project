@@ -1,0 +1,29 @@
+{% extends 'base.html'%}
+
+{% block head %}
+<title>Index</title>
+{% endblock %}
+
+{% block body %}
+{% include 'index/sidebar.html' %}
+<div class="content">
+   <form action="{{url_for('.find_courses_handler')}}" method="get" >
+      <input type="text" name="q">
+      <button type="submit">Search</button>
+   </form>
+
+   {% if search_result is defined %}
+      {% for course in search_result %}  
+         <li>
+            <a href="{{ url_for('course_page.course_overview_handler', course_id=course.id) }}">{{course.name}}</a>
+         </li>
+      {% endfor %}
+      {% if next_url %}
+         <a href="{{ next_url }}">Next</a>
+      {% endif %}
+      {% if prev_url %}
+         <a href="{{ prev_url }}">Prev</a>
+      {% endif %}
+   {% endif %}
+</div>
+{% endblock %}
