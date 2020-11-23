@@ -1,11 +1,17 @@
-from flask import Blueprint, render_template, request, Markup, session, abort
+from flask import Blueprint, render_template, request, Markup, session, abort, redirect, url_for
 from database.db import Course, Homework, StudyMaterial, Announcement, UserCourse, db
 from sqlalchemy import desc
 from flask_login import login_required, current_user
+from app import app
 
 course_page = Blueprint('course_page', __name__,template_folder='templates')
 
-@course_page.route('/<int:course_id>')
+@course_page.route('/<int:course_id>/')
+@login_required
+def view_course_handler(course_id=None):
+    return redirect(url_for('.course_overview_handler', course_id=course_id))
+
+@course_page.route('/<int:course_id>/overview')
 @login_required
 def course_overview_handler(course_id=None):
     course = db.session.query(Course).filter(Course.id==course_id).first()
