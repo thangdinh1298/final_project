@@ -26,6 +26,11 @@
       {% if course_length_msg is defined and course_length_msg != "" %}
       <p>{{ course_length_msg }}</p>
       {% endif %}
+      <label for="owner_id"><b>Owner id</b></label>
+      <input type="text" placeholder="owner id" name="owner_id" id="owner_id" required>
+      {% if owner_id_msg is defined and owner_id_msg != "" %}
+      <p>{{ owner_id_msg }}</p>
+      {% endif %}
       <button type="submit"> Submit </button>
    </form>
 </body>

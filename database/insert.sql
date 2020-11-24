@@ -4,6 +4,8 @@ INSERT INTO User (username, password) VALUES
 ('thang', '123'),
 ('superuser', 'thisisapassword');
 
+INSERT INTO User (username, password, role) VALUES ('admin', 'admin', 2);
+
 INSERT INTO Course (name, description, info, course_length, user_id) VALUES 
 ("CNPM", "Mon thay Hung", "info", 12, 2), 
 ("Lap Trinh Mang", "Mon thay Khanh", "info", 13, 1), 

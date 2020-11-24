@@ -8,8 +8,6 @@ DROP TABLE IF EXISTS Homework;
 DROP TABLE IF EXISTS User;
 DROP TABLE IF EXISTS UserCourse;
 DROP TABLE IF EXISTS Announcement;
-DROP TABLE IF EXISTS Role;
-DROP TABLE IF EXISTS UserRole;
 
 CREATE TABLE IF NOT EXISTS User (
 	id INT NOT NULL AUTO_INCREMENT,
@@ -17,6 +15,7 @@ CREATE TABLE IF NOT EXISTS User (
 	password VARCHAR(100),
 	email VARCHAR(100),
 	phone VARCHAR(15),
+   role INT DEFAULT 1, -- 1 indicates a normal user and 2 indicates an admin
 	PRIMARY KEY(id)
 );
 
@@ -78,16 +77,3 @@ CREATE TABLE IF NOT EXISTS UserCourse (
 	FOREIGN KEY (user_id) REFERENCES User(id)
 );
 
-CREATE TABLE IF NOT EXISTS Role (
-   id INT NOT NULL AUTO_INCREMENT,
-   role VARCHAR(50),
-   PRIMARY KEY (id)
-);
-
-CREATE TABLE IF NOT EXISTS UserRole (
-   user_id INT NOT NULL,
-   role_id INT NOT NULL,
-   PRIMARY KEY (user_id, role_id),
-   FOREIGN KEY (user_id) REFERENCES User(id),
-   FOREIGN KEY (role_id) REFERENCES Role(id)
-);
