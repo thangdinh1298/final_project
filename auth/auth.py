@@ -29,7 +29,7 @@ def login():
     password = request.form['password']
 
     #FIXME: Hash password and compare
-    user = db.session.query(User).filter(User.name==username, User.password==password).first()
+    user = db.session.query(User).filter(User.username==username, User.password==password).first()
     if user is not None:
         login_user(user)
         return redirect(url_for('index_page.index_page_handler'))
