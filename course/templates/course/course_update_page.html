@@ -1,0 +1,72 @@
+{% extends 'base.html'%}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='update_page.css') }}">
+<script>
+function openTab(evt, tabName) {
+  // Declare all variables
+  var i, tabcontent, tablinks;
+
+  // Get all elements with class="tabcontent" and hide them
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+
+  // Get all elements with class="tablinks" and remove the class "active"
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+
+  // Show the current tab, and add an "active" class to the button that opened the tab
+  document.getElementById(tabName).style.display = "block";
+  evt.currentTarget.className += " active";
+}
+</script>
+<title>Index</title>
+{% endblock %}
+
+{% block body %}
+{% include 'index/sidebar.html' %}
+<div class="content">
+
+   <div class="tab">
+      <button class="tablinks" onclick="openTab(event, 'description')">Description</button>
+      <button class="tablinks" onclick="openTab(event, 'info')">Info</button>
+      <button class="tablinks" onclick="openTab(event, 'announcement')">Announcements</button>
+   </div>
+
+   <div class="tabcontent" id="description">
+      <h2>Description</h2>
+      {{ course.description | safe }}
+      <form action="#" method="POST">
+         <button type="submit">Update</button>
+      </form>
+      <form action="#" method="POST">
+         <button type="submit">Delete</button>
+      </form>
+   </div>
+
+   <div class="tabcontent" id="info">
+      <h2>Info</h2>
+      {{ course.info | safe }}
+      <form action="#" method="POST">
+         <button type="submit">Update</button>
+      </form>
+      <form action="#" method="POST">
+         <button type="submit">Delete</button>
+      </form>
+   </div>
+
+   <div class="tabcontent" id="announcement">
+      <h2>Make an announcement</h2>
+      {{ course.info | safe }}
+      <form action="#" method="POST">
+         <button type="submit">Delete</button>
+      </form>
+   </div>
+   
+</div>
+{% endblock %}
+

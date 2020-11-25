@@ -9,7 +9,7 @@
 <div class="content">
    {% for course in courses %}
       <li>
-         <a href="{{ url_for('course_page.course_overview_handler', course_id=course.id) }}">{{course.name}}</a>
+         <a href="{{ url_for('course_page.course_update_page_handler', course_id=course.id) }}">{{course.name}}</a>
       </li>
    {% endfor %}    
    {% if next_url %}

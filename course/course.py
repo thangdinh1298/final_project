@@ -5,7 +5,8 @@ from sqlalchemy import desc
 from flask_login import login_required, current_user
 from app import app
 
-course_page = Blueprint('course_page', __name__,template_folder='templates')
+course_page = Blueprint('course_page', __name__,template_folder='templates'\
+                        ,static_folder='static')
 
 def get_authorization(f):
     @wraps(f)
@@ -22,6 +23,7 @@ def get_authorization(f):
 def post_authorization(f):
     @wraps(f)
     def auth_func(*args, **kwargs):
+        course_id = kwargs['course_id']
         result = db.session.query(Course.user_id).filter(Course.id==course_id).first()
         owner_id = result.user_id
 
@@ -42,6 +44,7 @@ def view_course_handler(course_id=None):
 @get_authorization
 def course_overview_handler(course_id=None):
     course = db.session.query(Course).filter(Course.id==course_id).first()
+    course.description = Markup(course.description).unescape()
     return render_template('course/course_overview.html', course=course)
 
 @course_page.route('/<int:course_id>/content')
@@ -90,6 +93,15 @@ def course_announcements_handler(course_id=None):
     # FIXME: Perhaps we need no fetch by pages and not all...
     announcements = db.session.query(Announcement.description, Announcement.created_date).filter(Announcement.course_id==course_id).order_by(desc(Announcement.created_date)).all()
     return render_template('course/course_announcements.html', announcements=announcements)
+
+@course_page.route('/<int:course_id>/update_page')
+@login_required
+@post_authorization
+def course_update_page_handler(course_id=None):
+    course = db.session.query(Course).filter(Course.id==course_id).first()
+    course.description = Markup(course.description).unescape()
+    course.info = Markup(course.info).unescape()
+    return render_template("course/course_update_page.html", course=course)
 
 @course_page.url_value_preprocessor
 def set_course_id(endpoint, values):
