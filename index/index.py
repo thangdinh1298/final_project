@@ -11,11 +11,6 @@ RESULT_PER_PAGE = 2
 def index_page_handler():
     return render_template('index/index.html')
 
-@index_page.route('/dummy')
-@login_required
-def dummy_handler():
-    return "Hello"
-
 @index_page.route('/find_courses', methods=['GET'])
 @login_required
 def find_courses_handler():
@@ -39,7 +34,6 @@ def find_courses_handler():
 @login_required
 def view_registered_courses_handler():
     page = request.args.get('page', 1, type=int)
-#    courses = db.session.query(Course).paginate(page, result_per_page, False)
     courses = db.session.query(Course.id, Course.name).join(UserCourse, Course.id==UserCourse.course_id).filter(UserCourse.user_id==current_user.id).paginate(page, RESULT_PER_PAGE, False)
     next_url = url_for('.view_registered_courses_handler', page=courses.next_num)\
             if courses.has_next else None
@@ -48,8 +42,14 @@ def view_registered_courses_handler():
     return render_template('index/view_registered_course.html', courses=courses.items,\
                             next_url=next_url, prev_url=prev_url)
 
-#TODO: Create request should be submitted to the course blueprint, not this
-@index_page.route('/create')
+@index_page.route('/view_owned_courses')
 @login_required
-def create_course_handler():
-    return "Hello"
+def view_owned_courses_handler():
+    page = request.args.get('page', 1, type=int)
+    courses = db.session.query(Course.id, Course.name).filter(Course.user_id==current_user.id).paginate(page, RESULT_PER_PAGE, False)
+    next_url = url_for('.view_owned_courses_handler', page=courses.next_num)\
+            if courses.has_next else None
+    prev_url = url_for('.view_owned_courses_handler', page=courses.prev_num)\
+            if courses.has_prev else None
+    return render_template('index/view_owned_courses.html', courses=courses.items,\
+                            next_url=next_url, prev_url=prev_url)

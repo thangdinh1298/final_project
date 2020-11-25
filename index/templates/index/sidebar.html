@@ -4,6 +4,9 @@
      <button type="submit">Find courses</button>
   </form>
   <form action="{{ url_for('.view_registered_courses_handler') }}">
-     <button type="submit">View your courses</button>
+     <button type="submit">View courses you joined</button>
+  </form>
+  <form action="{{ url_for('.view_owned_courses_handler') }}">
+     <button type="submit">View courses you own</button>
   </form>
 </div>

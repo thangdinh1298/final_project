@@ -1,3 +1,4 @@
+from functools import wraps
 from flask import Blueprint, render_template, request, Markup, session, abort, redirect, url_for
 from database.db import Course, Homework, StudyMaterial, Announcement, UserCourse, db
 from sqlalchemy import desc
@@ -6,25 +7,53 @@ from app import app
 
 course_page = Blueprint('course_page', __name__,template_folder='templates')
 
+def get_authorization(f):
+    @wraps(f)
+    def auth_func(*args, **kwargs):
+        course_id = kwargs['course_id']
+        result = db.session.query(UserCourse.id).filter(UserCourse.course_id==course_id, UserCourse.user_id==current_user.id).first()
+
+        if result == None:
+            return abort(401)
+        
+        return f(*args, **kwargs)
+    return auth_func
+
+def post_authorization(f):
+    @wraps(f)
+    def auth_func(*args, **kwargs):
+        result = db.session.query(Course.user_id).filter(Course.id==course_id).first()
+        owner_id = result.user_id
+
+        if owner_id != current_user.id:
+            return abort(401)
+        
+        return f(*args, **kwargs)
+    return auth_func
+
 @course_page.route('/<int:course_id>/')
 @login_required
+@get_authorization
 def view_course_handler(course_id=None):
     return redirect(url_for('.course_overview_handler', course_id=course_id))
 
 @course_page.route('/<int:course_id>/overview')
 @login_required
+@get_authorization
 def course_overview_handler(course_id=None):
     course = db.session.query(Course).filter(Course.id==course_id).first()
     return render_template('course/course_overview.html', course=course)
 
 @course_page.route('/<int:course_id>/content')
 @login_required
+@get_authorization
 def content_handler(course_id=None):
     course = db.session.query(Course.course_length).filter(Course.id==course_id).first()
     return render_template('course/course_content.html', course_length=course.course_length)
 
 @course_page.route('/<int:course_id>/info')
 @login_required
+@get_authorization
 def course_info_handler(course_id):
     course = db.session.query(Course.info).filter(Course.id==course_id).first()
     info = Markup(course.info).unescape()
@@ -32,6 +61,7 @@ def course_info_handler(course_id):
 
 @course_page.route('/<int:course_id>/week/<int:week_num>/homework')
 @login_required
+@get_authorization
 def course_week_homework_handler(course_id=None,week_num=None):
     homework = db.session.query(Homework.description).filter(Homework.course_id==course_id, Homework.week==week_num).first()
     if homework == None:
@@ -40,6 +70,7 @@ def course_week_homework_handler(course_id=None,week_num=None):
 
 @course_page.route('/<int:course_id>/week/<int:week_num>/material')
 @login_required
+@get_authorization
 def course_week_material_handler(course_id=None,week_num=None):
     material = db.session.query(StudyMaterial.description).filter(StudyMaterial.course_id==course_id, StudyMaterial.week==week_num).first()
     if material == None: 
@@ -48,11 +79,13 @@ def course_week_material_handler(course_id=None,week_num=None):
 
 @course_page.route('/<int:course_id>/livestream')
 @login_required
+@get_authorization
 def course_livestream_handler(course_id=None):
     return render_template('course/course_livestream.html') 
 
 @course_page.route('/<int:course_id>/announcements')
 @login_required
+@get_authorization
 def course_announcements_handler(course_id=None):
     # FIXME: Perhaps we need no fetch by pages and not all...
     announcements = db.session.query(Announcement.description, Announcement.created_date).filter(Announcement.course_id==course_id).order_by(desc(Announcement.created_date)).all()
@@ -65,11 +98,5 @@ def set_course_id(endpoint, values):
     course_id = values['course_id']
     if db.session.query(Course.id).filter(Course.id==course_id).first() == None:
         abort(404)
-
-    if current_user.is_anonymous == True:
-        abort(401)
-
-    if db.session.query(UserCourse.id).filter(UserCourse.course_id==course_id, UserCourse.user_id==current_user.id).first() == None:
-        abort(401)
 
     session['course_id'] = values['course_id']
