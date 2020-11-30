@@ -1,7 +1,8 @@
 from functools import wraps
-from flask import Blueprint, render_template, request, Markup, session, abort, redirect, url_for
+from flask import Blueprint, render_template, request, Markup, session, abort, redirect, url_for, escape
 from database.db import Course, Homework, StudyMaterial, Announcement, UserCourse, db
 from sqlalchemy import desc
+from sqlalchemy.exc import SQLAlchemyError
 from flask_login import login_required, current_user
 from app import app
 
@@ -47,6 +48,22 @@ def course_overview_handler(course_id=None):
     course.description = Markup(course.description).unescape()
     return render_template('course/course_overview.html', course=course)
 
+@course_page.route('/<int:course_id>/overview', methods=["POST"])
+@login_required
+@post_authorization
+def course_overview_update_handler(course_id=None):
+    description = request.form["description"]
+    course = db.session.query(Course).filter(Course.id==course_id).first()
+    course.description = str(escape(description))
+
+    try:
+        db.session.commit()
+    except SQLAlchemyError as e:
+        db.session.rollback()
+        abort(500)
+
+    return "Successful"
+
 @course_page.route('/<int:course_id>/content')
 @login_required
 @get_authorization
@@ -61,6 +78,22 @@ def course_info_handler(course_id):
     course = db.session.query(Course.info).filter(Course.id==course_id).first()
     info = Markup(course.info).unescape()
     return render_template('course/course_info.html', info=info) 
+
+@course_page.route('/<int:course_id>/info', methods=["POST"])
+@login_required
+@post_authorization
+def course_info_update_handler(course_id):
+    info = request.form["info"]
+    course = db.session.query(Course).filter(Course.id==course_id).first()
+    course.info = str(escape(info))
+
+    try:
+        db.session.commit()
+    except SQLAlchemyError as e:
+        db.session.rollback()
+        abort(500)
+
+    return "Successful"
 
 @course_page.route('/<int:course_id>/week/<int:week_num>/homework')
 @login_required

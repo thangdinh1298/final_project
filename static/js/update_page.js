@@ -34,6 +34,7 @@ function updateWithTextArea(div_id, button_id, url) {
    form.action=url
    form.method="POST"
    let text_area = document.createElement("textarea");
+   text_area.name=div_id //set name of text data the same as that of div id
    button = document.createElement("button");
    button.type = "submit"
    button.textContent = "Update"
