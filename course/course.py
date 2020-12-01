@@ -48,21 +48,30 @@ def course_overview_handler(course_id=None):
     course.description = Markup(course.description).unescape()
     return render_template('course/course_overview.html', course=course)
 
-@course_page.route('/<int:course_id>/overview', methods=["POST"])
+@course_page.route('/<int:course_id>/overview', methods=["POST", "DELETE"])
 @login_required
 @post_authorization
 def course_overview_update_handler(course_id=None):
-    description = request.form["description"]
     course = db.session.query(Course).filter(Course.id==course_id).first()
-    course.description = str(escape(description))
+    if request.method == "POST":
+        description = request.form["description"]
+        course.description = str(escape(description))
 
-    try:
-        db.session.commit()
-    except SQLAlchemyError as e:
-        db.session.rollback()
-        abort(500)
+        try:
+            db.session.commit()
+        except SQLAlchemyError as e:
+            db.session.rollback()
+            abort(500)
 
-    return "Successful"
+        return "Successful"
+    else:
+        try:
+            course.description = None
+            db.session.commit()
+        except SQLAlchemyError as e:
+            abort(500)
+
+        return "Sucessful"
 
 @course_page.route('/<int:course_id>/content')
 @login_required
@@ -79,21 +88,30 @@ def course_info_handler(course_id):
     info = Markup(course.info).unescape()
     return render_template('course/course_info.html', info=info) 
 
-@course_page.route('/<int:course_id>/info', methods=["POST"])
+@course_page.route('/<int:course_id>/info', methods=["POST", "DELETE"])
 @login_required
 @post_authorization
 def course_info_update_handler(course_id):
-    info = request.form["info"]
     course = db.session.query(Course).filter(Course.id==course_id).first()
-    course.info = str(escape(info))
+    if request.method == "POST":
+        info = request.form["info"]
+        course.info = str(escape(info))
 
-    try:
-        db.session.commit()
-    except SQLAlchemyError as e:
-        db.session.rollback()
-        abort(500)
+        try:
+            db.session.commit()
+        except SQLAlchemyError as e:
+            db.session.rollback()
+            abort(500)
 
-    return "Successful"
+        return "Successful"
+    else:
+        try:
+            course.info = None
+            db.session.commit()
+        except SQLAlchemyError as e:
+            abort(500)
+
+        return "Sucessful"
 
 @course_page.route('/<int:course_id>/week/<int:week_num>/homework')
 @login_required
@@ -132,8 +150,8 @@ def course_announcements_handler(course_id=None):
 @post_authorization
 def course_update_page_handler(course_id=None):
     course = db.session.query(Course).filter(Course.id==course_id).first()
-    course.description = Markup(course.description).unescape()
-    course.info = Markup(course.info).unescape()
+    course.description = Markup(course.description).unescape() if course.description is not None else None
+    course.info = Markup(course.info).unescape() if course.info is not None else None
     return render_template("course/course_update_page.html", course=course)
 
 @course_page.url_value_preprocessor

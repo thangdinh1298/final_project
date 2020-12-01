@@ -44,3 +44,14 @@ function updateWithTextArea(div_id, button_id, url) {
    div.insertBefore(form, delete_form)
    tinymce.init({ selector: "#" + div_id + " form textarea"});
 }
+
+function deleteItem(div_id, url) {
+   $.ajax({
+      method:'DELETE',
+      url: url,
+      async: false,
+      dataType: 'html'
+   }).done(function(data) {
+      console.log(data)
+   })
+}

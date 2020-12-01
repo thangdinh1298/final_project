@@ -8,6 +8,7 @@
 </script>
 <script src="{{ url_for('static', filename='js/update_page.js') }}"></script>
 <script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <title>Index</title>
 {% endblock %}
 
@@ -22,20 +23,20 @@
 
    <div class="tabcontent" id="description">
       <h2>Description</h2>
-      {{ course.description | safe }}
+      {% if course.description is not none %}
+         {{ course.description | safe }}
+      {% endif %}
       <button type="submit" id="update" onClick="updateWithTextArea('description', 'update', overview_update)">Update</button>
-      <form action="#" method="POST">
-         <button type="submit">Delete</button>
-      </form>
+      <button type="submit" onclick="deleteItem('description', overview_update)">Delete</button>
    </div>
 
    <div class="tabcontent" id="info">
       <h2>Info</h2>
-      {{ course.info | safe }}
+      {% if course.info is not none %}
+         {{ course.info | safe }}
+      {% endif %}
       <button type="submit" id="update" onClick="updateWithTextArea('info', 'update', info_update)">Update</button>
-      <form action="#" method="POST">
-         <button type="submit">Delete</button>
-      </form>
+      <button type="submit" onclick="deleteItem('info', info_update)">Delete</button>
    </div>
 
    <div class="tabcontent" id="announcement">
