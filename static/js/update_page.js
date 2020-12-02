@@ -26,7 +26,7 @@ function insertAfter(newNode, existingNode) {
 function updateWithTextArea(div_id, button_id, url) {
    let div = document.getElementById(div_id);
    let button = document.querySelector("#" + div_id + " #" + button_id)
-   let delete_form = document.querySelector("#" + div_id + " form")
+   let delete_button = document.querySelector("#" + div_id + " #delete")
    
    button.remove()
 
@@ -41,7 +41,7 @@ function updateWithTextArea(div_id, button_id, url) {
 
    form.appendChild(text_area)
    form.appendChild(button)
-   div.insertBefore(form, delete_form)
+   div.insertBefore(form, delete_button)
    tinymce.init({ selector: "#" + div_id + " form textarea"});
 }
 

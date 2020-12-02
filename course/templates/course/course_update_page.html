@@ -27,7 +27,7 @@
          {{ course.description | safe }}
       {% endif %}
       <button type="submit" id="update" onClick="updateWithTextArea('description', 'update', overview_update)">Update</button>
-      <button type="submit" onclick="deleteItem('description', overview_update)">Delete</button>
+      <button type="submit" id="delete" onclick="deleteItem('description', overview_update)">Delete</button>
    </div>
 
    <div class="tabcontent" id="info">
@@ -36,7 +36,7 @@
          {{ course.info | safe }}
       {% endif %}
       <button type="submit" id="update" onClick="updateWithTextArea('info', 'update', info_update)">Update</button>
-      <button type="submit" onclick="deleteItem('info', info_update)">Delete</button>
+      <button type="submit" id="delete" onclick="deleteItem('info', info_update)">Delete</button>
    </div>
 
    <div class="tabcontent" id="announcement">
