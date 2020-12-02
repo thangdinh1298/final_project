@@ -4,6 +4,7 @@ from database.db import Course, Homework, StudyMaterial, Announcement, UserCours
 from sqlalchemy import desc
 from sqlalchemy.exc import SQLAlchemyError
 from flask_login import login_required, current_user
+from datetime import datetime
 from app import app
 
 course_page = Blueprint('course_page', __name__,template_folder='templates'\
@@ -145,14 +146,31 @@ def course_announcements_handler(course_id=None):
     announcements = db.session.query(Announcement.description, Announcement.created_date).filter(Announcement.course_id==course_id).order_by(desc(Announcement.created_date)).all()
     return render_template('course/course_announcements.html', announcements=announcements)
 
+@course_page.route('/<int:course_id>/announcements', methods=["POST"])
+@login_required
+@post_authorization
+def course_announcements_create_handler(course_id=None):
+    course = db.session.query(Course).filter(Course.id==course_id).first()
+    announcement = Announcement(description=request.form["announcement"], course_id=course_id, created_date=datetime.today())
+
+    try:
+        db.session.add(announcement)
+        db.session.commit()
+    except SQLAlchemyError as e:
+        db.session.rollback()
+        abort(500)
+
+    return "Successful"
+
 @course_page.route('/<int:course_id>/update_page')
 @login_required
 @post_authorization
 def course_update_page_handler(course_id=None):
     course = db.session.query(Course).filter(Course.id==course_id).first()
+    announcements = db.session.query(Announcement.description, Announcement.created_date).filter(Announcement.course_id==course_id).order_by(desc(Announcement.created_date)).limit(2).all()
     course.description = Markup(course.description).unescape() if course.description is not None else None
     course.info = Markup(course.info).unescape() if course.info is not None else None
-    return render_template("course/course_update_page.html", course=course)
+    return render_template("course/course_update_page.html", course=course, announcements=announcements)
 
 @course_page.url_value_preprocessor
 def set_course_id(endpoint, values):

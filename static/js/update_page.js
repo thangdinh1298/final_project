@@ -42,7 +42,10 @@ function updateWithTextArea(div_id, button_id, url) {
    form.appendChild(text_area)
    form.appendChild(button)
    div.insertBefore(form, delete_button)
-   tinymce.init({ selector: "#" + div_id + " form textarea"});
+   var editor = new Simditor({
+     textarea: $("#" + div_id + " form textarea")
+     //optional options
+   });
 }
 
 function deleteItem(div_id, url) {

@@ -2,12 +2,18 @@
 
 {% block head %}
 <link rel="stylesheet" href="{{ url_for('static', filename='update_page.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='vendor/simditor/site/assets/styles/simditor.css') }}" />
+
+<script type="text/javascript" src="{{ url_for('static', filename='vendor/simditor/site/assets/scripts/jquery.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='vendor/simditor/site/assets/scripts/module.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='vendor/simditor/site/assets/scripts/hotkeys.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='vendor/simditor/site/assets/scripts/uploader.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='vendor/simditor/site/assets/scripts/simditor.js') }}"></script>
 <script>
    let overview_update = "{{ url_for('course_page.course_overview_update_handler', course_id=session['course_id']) }}";
    let info_update = "{{ url_for('course_page.course_info_handler', course_id=session['course_id']) }}";
 </script>
 <script src="{{ url_for('static', filename='js/update_page.js') }}"></script>
-<script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <title>Index</title>
 {% endblock %}
@@ -41,13 +47,22 @@
 
    <div class="tabcontent" id="announcement">
       <h2>Make an announcement</h2>
-      {{ course.info | safe }}
-      <form action="#" method="POST">
-         <button type="submit">Delete</button>
+      {% for announcement in announcements %}  
+         <li>
+            Created time: {{announcement.created_date}}
+            {{announcement.description}}
+         </li>
+      {% endfor %}
+      <form action="{{ url_for('course_page.course_announcements_create_handler', course_id=session['course_id']) }}" method="POST">
+         <textarea name="announcement"></textarea>
+         <button type="submit">Create</button>
       </form>
    </div>
    
    <script>
+      var editor = new Simditor({
+        textarea: $('textarea')
+      });
       let elem = document.getElementById('description');
       elem.style.display = "block";
    </script>
