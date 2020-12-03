@@ -1,0 +1,45 @@
+{% extends 'base.html'%}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='update_page.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='vendor/simditor/site/assets/styles/simditor.css') }}" />
+
+<script type="text/javascript" src="{{ url_for('static', filename='vendor/simditor/site/assets/scripts/jquery.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='vendor/simditor/site/assets/scripts/module.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='vendor/simditor/site/assets/scripts/hotkeys.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='vendor/simditor/site/assets/scripts/uploader.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='vendor/simditor/site/assets/scripts/simditor.js') }}"></script>
+<script>
+   let material_update = "{{ url_for('course_page.course_week_material_update_handler', course_id=session['course_id'], week_num=context['week']) }}";
+</script>
+<script src="{{ url_for('static', filename='js/update_page.js') }}"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<title>Index</title>
+{% endblock %}
+
+{% block body %}
+{% include 'index/sidebar.html' %}
+<div class="content">
+   <div class="tab">
+      <button class="tablinks active" onclick="openTab(event, 'material')">Material</button>
+   </div>
+
+   <div class="tabcontent" id="material">
+      <h2>Material</h2>
+      {% if 'material' in context %}
+         {{ context["material"] | safe }}
+      {% endif %}
+      <button type="submit" id="update" onClick="updateWithTextArea('material', 'update', material_update)">Update</button>
+      <button type="submit" id="delete" onclick="deleteItem('material', overview_update)">Delete</button>
+   </div>
+
+   <script>
+      //var editor = new Simditor({
+      //  textarea: $('textarea')
+      //});
+      let elem = document.getElementById('material');
+      elem.style.display = "block";
+   </script>
+</div>
+{% endblock %}
+

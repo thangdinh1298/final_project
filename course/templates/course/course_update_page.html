@@ -25,6 +25,7 @@
       <button class="tablinks active" onclick="openTab(event, 'description')">Description</button>
       <button class="tablinks" onclick="openTab(event, 'info')">Info</button>
       <button class="tablinks" onclick="openTab(event, 'announcement')">Announcements</button>
+      <button class="tablinks" onclick="openTab(event, 'content')">Content</button>
    </div>
 
    <div class="tabcontent" id="description">
@@ -50,7 +51,7 @@
       {% for announcement in announcements %}  
          <li>
             Created time: {{announcement.created_date}}
-            {{announcement.description}}
+            {{announcement.description | safe}}
          </li>
       {% endfor %}
       <form action="{{ url_for('course_page.course_announcements_create_handler', course_id=session['course_id']) }}" method="POST">
@@ -59,6 +60,15 @@
       </form>
    </div>
    
+   <div class="tabcontent" id="content">
+      <h2>Content</h2>
+      {% for number in range(course.course_length) %}
+      <li>
+         <a href="{{ url_for('course_page.course_week_update_handler', course_id=session['course_id'], week_num=number) }}">Week {{ number }}</a>
+      </li>
+      {% endfor %}
+   </div>
+
    <script>
       var editor = new Simditor({
         textarea: $('textarea')

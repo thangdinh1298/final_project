@@ -132,6 +132,29 @@ def course_week_material_handler(course_id=None,week_num=None):
         return render_template('course/course_content_detail.html')
     return render_template('course/course_content_detail.html', html=material.description)
 
+@course_page.route('/<int:course_id>/week/<int:week_num>/material', methods=["POST"])
+@login_required
+@post_authorization
+def course_week_material_update_handler(course_id=None,week_num=None):
+    material = db.session.query(StudyMaterial).filter(StudyMaterial.course_id==course_id, StudyMaterial.week==week_num).first()
+    if material is None:
+        material = StudyMaterial(course_id=course_id, week=week_num, description=request.form["material"])
+        try:
+            db.session.add(material)
+            db.session.commit()
+        except SQLAlchemyError as e:
+            db.session.rollback()
+            abort(500)
+    else:
+        material.description = str(escape(request.form['material']))
+        try:
+            db.session.commit()
+        except SQLAlchemyError as e:
+            db.session.rollback()
+            abort(500)
+
+    return "Sucessful"
+
 @course_page.route('/<int:course_id>/livestream')
 @login_required
 @get_authorization
@@ -151,7 +174,7 @@ def course_announcements_handler(course_id=None):
 @post_authorization
 def course_announcements_create_handler(course_id=None):
     course = db.session.query(Course).filter(Course.id==course_id).first()
-    announcement = Announcement(description=request.form["announcement"], course_id=course_id, created_date=datetime.today())
+    announcement = Announcement(description=str(escape(request.form["announcement"])), course_id=course_id, created_date=datetime.today())
 
     try:
         db.session.add(announcement)
@@ -167,10 +190,29 @@ def course_announcements_create_handler(course_id=None):
 @post_authorization
 def course_update_page_handler(course_id=None):
     course = db.session.query(Course).filter(Course.id==course_id).first()
-    announcements = db.session.query(Announcement.description, Announcement.created_date).filter(Announcement.course_id==course_id).order_by(desc(Announcement.created_date)).limit(2).all()
+    announcements = db.session.query(Announcement).filter(Announcement.course_id==course_id).order_by(desc(Announcement.created_date)).limit(2).all()
     course.description = Markup(course.description).unescape() if course.description is not None else None
     course.info = Markup(course.info).unescape() if course.info is not None else None
+
+    for announcement in announcements:
+        announcement.description = Markup(announcement.description).unescape()
+
     return render_template("course/course_update_page.html", course=course, announcements=announcements)
+
+@course_page.route('/<int:course_id>/week/<int:week_num>/update_page')
+@login_required
+@post_authorization
+def course_week_update_handler(course_id=None, week_num=None):
+    material = db.session.query(StudyMaterial.description).filter(StudyMaterial.course_id==course_id, StudyMaterial.week==week_num).first()
+    homework = db.session.query(Homework.description).filter(Homework.course_id==course_id, Homework.week==week_num).first()
+    context = {}
+    if material is not None:
+        context['material'] = Markup(material.description).unescape()
+    if homework is not None:
+        context['homework'] = Markup(homework.description).unescape()
+    context['week'] = week_num
+
+    return render_template("course/course_week_content_update.html", context=context)
 
 @course_page.url_value_preprocessor
 def set_course_id(endpoint, values):
