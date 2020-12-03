@@ -11,6 +11,7 @@
 <script type="text/javascript" src="{{ url_for('static', filename='vendor/simditor/site/assets/scripts/simditor.js') }}"></script>
 <script>
    let material_update = "{{ url_for('course_page.course_week_material_update_handler', course_id=session['course_id'], week_num=context['week']) }}";
+   let homework_update = "{{ url_for('course_page.course_week_homework_update_handler', course_id=session['course_id'], week_num=context['week']) }}";
 </script>
 <script src="{{ url_for('static', filename='js/update_page.js') }}"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -22,6 +23,7 @@
 <div class="content">
    <div class="tab">
       <button class="tablinks active" onclick="openTab(event, 'material')">Material</button>
+      <button class="tablinks active" onclick="openTab(event, 'homework')">Homework</button>
    </div>
 
    <div class="tabcontent" id="material">
@@ -31,6 +33,15 @@
       {% endif %}
       <button type="submit" id="update" onClick="updateWithTextArea('material', 'update', material_update)">Update</button>
       <button type="submit" id="delete" onclick="deleteItem('material', material_update)">Delete</button>
+   </div>
+
+   <div class="tabcontent" id="homework">
+      <h2>Homework</h2>
+      {% if 'homework' in context %}
+         {{ context["homework"] | safe }}
+      {% endif %}
+      <button type="submit" id="update" onClick="updateWithTextArea('homework', 'update', homework_update)">Update</button>
+      <button type="submit" id="delete" onclick="deleteItem('homework', homework_update)">Delete</button>
    </div>
 
    <script>

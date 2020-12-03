@@ -121,7 +121,42 @@ def course_week_homework_handler(course_id=None,week_num=None):
     homework = db.session.query(Homework.description).filter(Homework.course_id==course_id, Homework.week==week_num).first()
     if homework == None:
         return render_template('course/course_content_detail.html')
-    return render_template('course/course_content_detail.html', html=homework.description)
+    return render_template('course/course_content_detail.html', html=Markup(homework.description).unescape())
+
+@course_page.route('/<int:course_id>/week/<int:week_num>/homework', methods=["POST", "DELETE"])
+@login_required
+@post_authorization
+def course_week_homework_update_handler(course_id=None,week_num=None):
+    homework = db.session.query(Homework).filter(Homework.course_id==course_id, Homework.week==week_num).first()
+    if request.method == 'POST':
+        if homework is None:
+            homework = Homework(course_id=course_id, week=week_num, description=str(escape(request.form["homework"])))
+            try:
+                db.session.add(homework)
+                db.session.commit()
+            except SQLAlchemyError as e:
+                db.session.rollback()
+                abort(500)
+        else:
+            homework.description = str(escape(request.form['homework']))
+            try:
+                db.session.commit()
+            except SQLAlchemyError as e:
+                db.session.rollback()
+                abort(500)
+
+        return "Sucessful"
+    else:
+        if homework is None:
+            return "Nothing to delete"
+        else:
+            try:
+                db.session.delete(homework)
+                db.session.commit()
+            except SQLAlchemyError as e:
+                db.session.rollback()
+                abort(500)
+            return "Sucessful"
 
 @course_page.route('/<int:course_id>/week/<int:week_num>/material')
 @login_required
@@ -130,7 +165,7 @@ def course_week_material_handler(course_id=None,week_num=None):
     material = db.session.query(StudyMaterial.description).filter(StudyMaterial.course_id==course_id, StudyMaterial.week==week_num).first()
     if material == None: 
         return render_template('course/course_content_detail.html')
-    return render_template('course/course_content_detail.html', html=material.description)
+    return render_template('course/course_content_detail.html', html=Markup(material.description).unescape())
 
 @course_page.route('/<int:course_id>/week/<int:week_num>/material', methods=["POST", "DELETE"])
 @login_required
@@ -139,7 +174,7 @@ def course_week_material_update_handler(course_id=None,week_num=None):
     material = db.session.query(StudyMaterial).filter(StudyMaterial.course_id==course_id, StudyMaterial.week==week_num).first()
     if request.method == "POST":
         if material is None:
-            material = StudyMaterial(course_id=course_id, week=week_num, description=request.form["material"])
+            material = StudyMaterial(course_id=course_id, week=week_num, description=str(escape(request.form["material"])))
             try:
                 db.session.add(material)
                 db.session.commit()
