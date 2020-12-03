@@ -132,28 +132,40 @@ def course_week_material_handler(course_id=None,week_num=None):
         return render_template('course/course_content_detail.html')
     return render_template('course/course_content_detail.html', html=material.description)
 
-@course_page.route('/<int:course_id>/week/<int:week_num>/material', methods=["POST"])
+@course_page.route('/<int:course_id>/week/<int:week_num>/material', methods=["POST", "DELETE"])
 @login_required
 @post_authorization
 def course_week_material_update_handler(course_id=None,week_num=None):
     material = db.session.query(StudyMaterial).filter(StudyMaterial.course_id==course_id, StudyMaterial.week==week_num).first()
-    if material is None:
-        material = StudyMaterial(course_id=course_id, week=week_num, description=request.form["material"])
-        try:
-            db.session.add(material)
-            db.session.commit()
-        except SQLAlchemyError as e:
-            db.session.rollback()
-            abort(500)
-    else:
-        material.description = str(escape(request.form['material']))
-        try:
-            db.session.commit()
-        except SQLAlchemyError as e:
-            db.session.rollback()
-            abort(500)
+    if request.method == "POST":
+        if material is None:
+            material = StudyMaterial(course_id=course_id, week=week_num, description=request.form["material"])
+            try:
+                db.session.add(material)
+                db.session.commit()
+            except SQLAlchemyError as e:
+                db.session.rollback()
+                abort(500)
+        else:
+            material.description = str(escape(request.form['material']))
+            try:
+                db.session.commit()
+            except SQLAlchemyError as e:
+                db.session.rollback()
+                abort(500)
 
-    return "Sucessful"
+        return "Sucessful"
+    else:
+        if material is None:
+            return "Nothing to delete"
+        else:
+            try:
+                db.session.delete(material)
+                db.session.commit()
+            except SQLAlchemyError as e:
+                db.session.rollback()
+                abort(500)
+            return "Sucessful"
 
 @course_page.route('/<int:course_id>/livestream')
 @login_required
