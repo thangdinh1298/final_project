@@ -13,6 +13,7 @@
    let overview_update = "{{ url_for('course_page.course_overview_update_handler', course_id=session['course_id']) }}";
    let info_update = "{{ url_for('course_page.course_info_handler', course_id=session['course_id']) }}";
 </script>
+<script src="https://meet.jit.si/external_api.js"></script>
 <script src="{{ url_for('static', filename='js/update_page.js') }}"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <title>Index</title>
@@ -26,6 +27,7 @@
       <button class="tablinks" onclick="openTab(event, 'info')">Info</button>
       <button class="tablinks" onclick="openTab(event, 'announcement')">Announcements</button>
       <button class="tablinks" onclick="openTab(event, 'content')">Content</button>
+      <button class="tablinks" onclick="openTab(event, 'livestream')">Livestream</button>
    </div>
 
    <div class="tabcontent" id="description">
@@ -67,6 +69,26 @@
          <a href="{{ url_for('course_page.course_week_update_handler', course_id=session['course_id'], week_num=number) }}">Week {{ number }}</a>
       </li>
       {% endfor %}
+   </div>
+
+   <div class="tabcontent" id="livestream">
+      <h2>Livestream</h2>
+      <input id="txtField" type="text" id="lname" name="lname">
+      <button onclick="joinRoom()">Click Me</button>
+      <div id="content">
+      </div>
+      <script>
+         function joinRoom() {
+          const domain = 'meet.jit.si';
+          const options = {
+               roomName: document.getElementById("txtField").value,
+               width: 700,
+               height: 700,
+               parentNode: document.querySelector("#livestream") 
+          };
+          const api = new JitsiMeetExternalAPI(domain, options);
+         }				  
+      </script>
    </div>
 
    <script>
