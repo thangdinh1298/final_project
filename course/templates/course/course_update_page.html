@@ -78,6 +78,13 @@
       </div>
       <script>
          function joinRoom() {
+          parent_node = document.querySelector("#livestream");
+          for  (var i = 0; i < parent_node.children.length; i++) {
+               console.log(parent_node.children[i].nodeName)
+               if (parent_node.children[i].nodeName == "IFRAME") {
+                   parent_node.children[i].remove()
+               }
+          }
           const domain = 'meet.jit.si';
           const options = {
                roomName: document.getElementById("txtField").value,
