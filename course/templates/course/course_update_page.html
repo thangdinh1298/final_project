@@ -12,6 +12,7 @@
 <script>
    let overview_update = "{{ url_for('course_page.course_overview_update_handler', course_id=session['course_id']) }}";
    let info_update = "{{ url_for('course_page.course_info_handler', course_id=session['course_id']) }}";
+   let submit_announcement = "{{ url_for('course_page.course_announcements_create_handler', course_id=session['course_id']) }}"
 </script>
 <script src="https://meet.jit.si/external_api.js"></script>
 <script src="{{ url_for('static', filename='js/update_page.js') }}"></script>
@@ -56,10 +57,8 @@
             {{announcement.description | safe}}
          </li>
       {% endfor %}
-      <form action="{{ url_for('course_page.course_announcements_create_handler', course_id=session['course_id']) }}" method="POST">
-         <textarea name="announcement"></textarea>
-         <button type="submit">Create</button>
-      </form>
+      <textarea name="announcement" id="announcement_text"></textarea>
+      <button type="submit" onclick="submitAnnouncement('announcement_text', submit_announcement)">Create</button>
    </div>
    
    <div class="tabcontent" id="content">

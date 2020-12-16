@@ -10,7 +10,7 @@
    <ul>
    {% for announcement in announcements %}
    <li> Created time: {{ announcement.created_date }} </li>
-   <div> {{ announcement.description }} </div>
+   <div> {{ announcement.description | safe }} </div>
    {% endfor %}    
    </ul>
 </div>

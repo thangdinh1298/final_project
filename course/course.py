@@ -213,7 +213,9 @@ def course_livestream_handler(course_id=None):
 @get_authorization
 def course_announcements_handler(course_id=None):
     # FIXME: Perhaps we need no fetch by pages and not all...
-    announcements = db.session.query(Announcement.description, Announcement.created_date).filter(Announcement.course_id==course_id).order_by(desc(Announcement.created_date)).all()
+    announcements = db.session.query(Announcement).filter(Announcement.course_id==course_id).order_by(desc(Announcement.created_date)).all()
+    for announcement in announcements:
+        announcement.description = Markup(announcement.description).unescape()
     return render_template('course/course_announcements.html', announcements=announcements)
 
 @course_page.route('/<int:course_id>/announcements', methods=["POST"])
@@ -229,7 +231,6 @@ def course_announcements_create_handler(course_id=None):
     except SQLAlchemyError as e:
         db.session.rollback()
         abort(500)
-
     return "Successful"
 
 @course_page.route('/<int:course_id>/update_page')

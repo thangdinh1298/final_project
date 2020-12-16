@@ -58,3 +58,20 @@ function deleteItem(div_id, url) {
       console.log(data)
    })
 }
+
+function submitAnnouncement(text_area_id, url) {
+   let text_area = document.querySelector("#"+text_area_id);
+   $.ajax({
+      method:'POST',
+      data:{ 'announcement': text_area.value},
+      url: url,
+      async: false,
+      dataType: 'html',
+      success: function(data) {
+         alert(data)
+      },
+      error: function(xhr, textStatus, errorThrown) {
+         alert("Failed")
+      }
+   })
+}
