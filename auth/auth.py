@@ -1,10 +1,10 @@
 from flask_login import LoginManager, login_user, logout_user, login_required
-from flask import Blueprint, request, redirect, url_for
+from flask import Blueprint, request, redirect, url_for, render_template
 from database.db import User, db
 
 login_manager = LoginManager()
 login_manager.login_view = "auth_page.login"
-auth_page = Blueprint('auth_page', __name__)
+auth_page = Blueprint('auth_page', __name__, template_folder='templates', static_folder='static')
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -17,13 +17,7 @@ def load_user(user_id):
 @auth_page.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'GET':
-        return '''
-               <form action='login' method='POST'>
-                <input type='text' name='username' id='username' placeholder='username'/>
-                <input type='password' name='password' id='password' placeholder='password'/>
-                <input type='submit' name='submit'/>
-               </form>
-               '''
+        return render_template('auth/login.html')
 
     username = request.form['username']
     password = request.form['password']
@@ -34,14 +28,7 @@ def login():
         login_user(user)
         return redirect(url_for('index_page.index_page_handler'))
 
-    return '''
-               <form action='login' method='POST'>
-                <input type='text' name='username' id='username' placeholder='username'/>
-                <input type='password' name='password' id='password' placeholder='password'/>
-                <input type='submit' name='submit'/>
-               </form>
-               <div>Invalid credentials</div>
-           '''
+    return render_template('auth/login.html')
 @login_manager.unauthorized_handler
 def unauthorized():
     """Redirect unauthorized users to Login page."""
