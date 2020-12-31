@@ -1,22 +1,25 @@
 {% extends 'base.html'%}
 
 {% block head %}
+<link rel="stylesheet" href="{{url_for('static', filename='css/search-item.css')}}">
 <title>Index</title>
 {% endblock %}
 
 {% block body %}
 <div class="content">
    {% if search_result is defined %}
-      {% for course in search_result %}  
-         <li>
-            <a href="{{ url_for('course_page.course_overview_handler', course_id=course.id) }}">{{course.name}}</a>
-         </li>
-      {% endfor %}
+		<ul class="search-item-list" style="list-style-type: none;padding-left:0px">
+			{% for course in search_result %}  
+				<li>
+					<a href="{{ url_for('course_page.course_overview_handler', course_id=course.id) }}">{{course.name}}</a>
+				</li>
+			{% endfor %}
+		</ul>
       {% if next_url %}
-         <a href="{{ next_url }}">Next</a>
+		<a href="{{ next_url }}" class="next round">&#8250;</a>
       {% endif %}
       {% if prev_url %}
-         <a href="{{ prev_url }}">Prev</a>
+			<a href="{{ prev_url }}" class="previous round">&#8249;</a>
       {% endif %}
    {% endif %}
 </div>
