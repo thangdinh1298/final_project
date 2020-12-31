@@ -1,27 +1,48 @@
 {% extends 'base.html'%}
 
 {% block head %}
+<link rel="stylesheet" href="{{url_for('static', filename='css/search-item.css')}}">
 <title>Course Content</title>
 {% endblock %}
 
 {% block body %}
 {% include 'course/sidebar.html' %}
 <div class="content">
-   <ul>
+   <ul class="search-item-list">
    {% for number in range(course_length) %}
-      <li> Week {{ number }}</li>
-      <ul>
-         <li>
-            <a href="{{ url_for('.course_week_material_handler', week_num=number, course_id=session['course_id']) }}">Materials</a>
-         </li>
-         <li>
-            <a href="{{ url_for('.course_week_homework_handler', week_num=number, course_id=session['course_id']) }}">Homework</a>
-         </li>
-         <li>
-            <a href="{{ url_for('.course_week_homework_handler', week_num=number, course_id=session['course_id']) }}">Videos</a>
-         </li>
-      </ul>
+	   <li>
+			<button class="collapsible"> Week {{ number }}</button>
+			<div class="collapsible_content">
+				<ul class="search-item-list">
+					<li>
+						<a href="{{ url_for('.course_week_material_handler', week_num=number, course_id=session['course_id']) }}">Materials</a>
+					</li>
+					<li>
+						<a href="{{ url_for('.course_week_homework_handler', week_num=number, course_id=session['course_id']) }}">Homework</a>
+					</li>
+					<li>
+						<a href="{{ url_for('.course_week_homework_handler', week_num=number, course_id=session['course_id']) }}">Videos</a>
+					</li>
+				</ul>
+			</div>
+		</li>
    {% endfor %}    
    </ul>
 </div>
+<script>
+var coll = document.getElementsByClassName("collapsible");
+var i;
+
+for (i = 0; i < coll.length; i++) {
+  coll[i].addEventListener("click", function() {
+    this.classList.toggle("active");
+    var content = this.nextElementSibling;
+    if (content.style.display === "block") {
+      content.style.display = "none";
+    } else {
+      content.style.display = "block";
+    }
+  });
+}
+</script>
 {% endblock %}
