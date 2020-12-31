@@ -7,7 +7,7 @@ body {
   margin: 0;
   padding: 0;
   width: 200px;
-  background-color: #f1f1f1;
+  background-color: #23232e;
   position: fixed;
   height: 100%;
   overflow: auto;
@@ -15,12 +15,13 @@ body {
 
 .sidebar button {
   width:100%;
-  background-color: #4CAF50; /* Green */
+  background-color: #141418; /* Green */
   border: none;
   color: white;
   padding: 15px 32px;
   text-align: center;
   text-decoration: none;
+  color: #b6b6b6;
   display: inline-block;
   font-size: 16px;
 }
