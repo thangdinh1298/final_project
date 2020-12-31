@@ -5,13 +5,7 @@
 {% endblock %}
 
 {% block body %}
-{% include 'index/sidebar.html' %}
 <div class="content">
-   <form action="{{url_for('.find_courses_handler')}}" method="get" >
-      <input type="text" name="q">
-      <button type="submit">Search</button>
-   </form>
-
    {% if search_result is defined %}
       {% for course in search_result %}  
          <li>
