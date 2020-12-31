@@ -53,3 +53,13 @@ def view_owned_courses_handler():
             if courses.has_prev else None
     return render_template('index/view_owned_courses.html', courses=courses.items,\
                             next_url=next_url, prev_url=prev_url)
+
+
+@index_page.route('/statistics')
+@login_required
+def view_statistics_handler():
+    num_course_owned = db.session.query(Course.id).filter(Course.user_id == current_user.id).all()
+    courses = [course.id for course in num_course_owned]
+    num_participants = db.session.query(UserCourse).filter(UserCourse.course_id.in_(courses)).count()
+    num_course_participated = db.session.query(UserCourse).filter(UserCourse.user_id==current_user.id).count()
+    return render_template('index/statistics.html', num_course_owned=len(num_course_owned), num_participants=num_participants, num_course_participated=num_course_participated)

@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<link rel="stylesheet" href="{{url_for('static', filename='css/search-item.css')}}">
+<title>Statistics</title>
+{% endblock %}
+
+{% block body %}
+<div class="content">
+   <ul class="search-item-list">
+      <li>
+         <button class="collapsible">Statistics for all courses created</button>
+         <div class="collapsible_content">
+            <div>Number of courses owned: {{num_course_owned}}</div>
+            <div>Number of courses active: {{num_course_owned}}</div>
+            <div>Number of participants: {{num_participants}}</div>
+         </div>
+      </li>
+      <li>
+         <button class="collapsible">Statistics for all courses joined</button>
+         <div class="collapsible_content">
+            <div>Number of courses participated: {{num_course_participated}}</div>
+            <div>Number of courses finished: 0</div>
+         </div>
+      </li>
+   </ul>
+</div>
+<script>
+var coll = document.getElementsByClassName("collapsible");
+var i;
+
+for (i = 0; i < coll.length; i++) {
+  coll[i].addEventListener("click", function() {
+    this.classList.toggle("active");
+    var content = this.nextElementSibling;
+    if (content.style.display === "block") {
+      content.style.display = "none";
+    } else {
+      content.style.display = "block";
+    }
+  });
+}
+</script>
+{% endblock %}
