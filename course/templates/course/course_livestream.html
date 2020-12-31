@@ -5,8 +5,11 @@
 <script src="https://meet.jit.si/external_api.js"></script>
 {% endblock %}
 
+{% block sidebar %}
+   {% include 'course/sidebar.html' %}
+{% endblock %}
+
 {% block body %}
-{% include 'course/sidebar.html' %}
 <div class="content">
  	 <input id="txtField" type="text" id="lname" name="lname">
 	 <button onclick="joinRoom()">Click Me</button>

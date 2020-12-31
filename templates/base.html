@@ -11,7 +11,7 @@
 
 <body>
    {% include 'topbar.html' %}
-   {% include 'sidebar.html' %}
+   {% block sidebar %} {% endblock %}
    <div class="wrap-content" style="padding-top:50px">
       {% block body %} {% endblock %}
    </div>

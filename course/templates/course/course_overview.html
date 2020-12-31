@@ -4,8 +4,11 @@
 <title>Course Home</title>
 {% endblock %}
 
+{% block sidebar %}
+   {% include 'course/sidebar.html' %}
+{% endblock %}
+
 {% block body %}
-{% include 'course/sidebar.html' %}
 <div class="content">
    <div class="course-title">
    <link rel="stylesheet" href="{{ url_for('static', filename='css/course.css') }}">

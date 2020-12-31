@@ -1,5 +1,8 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/sidebar.css') }}">
 <div class="sidebar">
+  <form action="{{url_for('index_page.view_statistics_handler')}}">
+     <button><i class="fa fa-user" style="float:left"></i> {{current_user.username}}</button> 
+  </form>
    <form action="{{ url_for('.course_overview_handler', course_id=session['course_id']) }}">
      <button type="submit">Course Overview</button>
   </form>

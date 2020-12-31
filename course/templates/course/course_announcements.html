@@ -4,8 +4,11 @@
 <title>Course Announcements</title>
 {% endblock %}
 
+{% block sidebar %}
+   {% include 'course/sidebar.html' %}
+{% endblock %}
+
 {% block body %}
-{% include 'course/sidebar.html' %}
 <div class="content">
    <ul>
    {% for announcement in announcements %}
