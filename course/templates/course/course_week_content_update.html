@@ -18,8 +18,11 @@
 <title>Index</title>
 {% endblock %}
 
+{% block sidebar %}
+   {% include 'sidebar.html' %}
+{% endblock %}
+
 {% block body %}
-{% include 'index/sidebar.html' %}
 <div class="content">
    <div class="tab">
       <button class="tablinks active" onclick="openTab(event, 'material')">Material</button>
