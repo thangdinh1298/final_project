@@ -2,6 +2,7 @@
   /* Remove default list styling */
   list-style-type: none;
   padding-top: 3px;
+  padding-left: 0px;
 }
 
 .search-item-list li a {

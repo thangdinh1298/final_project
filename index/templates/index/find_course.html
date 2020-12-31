@@ -8,7 +8,7 @@
 {% block body %}
 <div class="content">
    {% if search_result is defined %}
-		<ul class="search-item-list" style="list-style-type: none;padding-left:0px">
+		<ul class="search-item-list" style="list-style-type: none;">
 			{% for course in search_result %}  
 				<li>
 					<a href="{{ url_for('course_page.course_overview_handler', course_id=course.id) }}">{{course.name}}</a>
