@@ -231,7 +231,8 @@ def course_announcements_create_handler(course_id=None):
     except SQLAlchemyError as e:
         db.session.rollback()
         abort(500)
-    return "Successful"
+    return {"description": request.form["announcement"],
+            "created_date": datetime.today().strftime('%Y-%m-%d %H:%M:%S')}
 
 @course_page.route('/<int:course_id>/update_page')
 @login_required

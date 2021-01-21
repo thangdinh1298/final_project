@@ -68,7 +68,11 @@ function submitAnnouncement(text_area_id, url) {
       async: false,
       dataType: 'html',
       success: function(data) {
-         alert(data)
+         let header = document.querySelector("#announcement h2");
+         let li = document.createElement("LI");
+         let json = $.parseJSON(data)
+         li.innerHTML = "Created time: " + json["created_date"] + "\n" + json["description"]
+         insertAfter(li ,header)
       },
       error: function(xhr, textStatus, errorThrown) {
          alert("Failed")
